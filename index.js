@@ -60,11 +60,22 @@ async function run() {
 
 
     const pureLifeHealthproduct = client.db("lifeHealth").collection("product")
+    const pureLifeHealthfakeData = client.db("lifeHealth").collection("fakeData")
     const pureLifeHealthCategorey = client.db("lifeHealth").collection("categorey")
     const pureLifeHealthUsers = client.db("lifeHealth").collection("users")
     const pureLifeHealthOrder = client.db("lifeHealth").collection("order")
 
-
+    app.get('/items', async (req, res) => {
+      const page = parseInt(req.query.page)
+      const size = parseInt(req.query.size)
+      console.log('pagination query',req.query)
+      const result =await pureLifeHealthfakeData.find().skip(page * size).limit(size).toArray();;
+      res.send(result)
+    })
+    app.get('/productsCount',async (req,res)=>{
+      const count = await pureLifeHealthfakeData.estimatedDocumentCount();
+      res.send({count})
+    })
     app.get('/cartItems', async (req, res) => {
       const carsor = pureLifeHealthproduct.find();
       const result = await carsor.toArray();
